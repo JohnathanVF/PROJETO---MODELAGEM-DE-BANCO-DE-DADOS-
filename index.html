@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dicionário de Dados - Gestão de Tratativas de Clientes</title>
+  <meta name="description" content="Dicionário de Dados com foco em governança (DAMA-DMBOK, COBIT, LGPD) do sistema Gestão de Tratativas de Clientes.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <button id="menuBtn" class="icon-btn menu-btn" type="button" aria-label="Abrir menu de tabelas" aria-controls="sidebar" aria-expanded="false">Menu</button>
+    <div class="topbar-title">
+      <strong id="tbProjeto">Gestão de Tratativas de Clientes</strong>
+      <span id="tbEmpresa" class="muted">Dicionário de Dados</span>
+    </div>
+    <button id="themeBtn" class="btn btn-ghost" type="button" aria-label="Alternar entre modo claro e escuro">
+      <span id="themeLabel">Modo claro</span>
+    </button>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar" class="sidebar" aria-label="Navegação por tabelas">
+      <p class="side-title">Navegação</p>
+      <a href="#identificacao" class="side-link">Identificação</a>
+      <a href="#legenda" class="side-link">Legenda</a>
+      <p class="side-title">Tabelas</p>
+      <nav id="sideTables"></nav>
+    </aside>
+    <div id="backdrop" class="backdrop" hidden></div>
+
+    <main class="main" id="conteudo">
+
+      <section id="identificacao" class="card">
+        <h1>Dicionário de Dados</h1>
+        <dl class="ident">
+          <div>
+            <dt>Projeto</dt>
+            <dd id="idProjeto"></dd>
+          </div>
+          <div>
+            <dt>Empresa</dt>
+            <dd id="idEmpresa"></dd>
+          </div>
+          <div>
+            <dt>Professor orientador</dt>
+            <dd id="idProfessor"></dd>
+          </div>
+          <div class="wide">
+            <dt>Escopo</dt>
+            <dd id="idEscopo"></dd>
+          </div>
+          <div class="wide">
+            <dt>Tecnologia</dt>
+            <dd id="idTecnologia"></dd>
+          </div>
+          <div class="wide">
+            <dt>Responsáveis</dt>
+            <dd><ul id="idResponsaveis" class="resp"></ul></dd>
+          </div>
+        </dl>
+      </section>
+
+      <section id="legenda" class="card">
+        <h2>Legenda</h2>
+        <div class="legend-grid">
+          <div>
+            <h3>Privacidade (LGPD/GDPR)</h3>
+            <p><span class="badge badge-dps">DPS</span> Dado Pessoal Sensível</p>
+            <p><span class="badge badge-dp">DP</span> Dado Pessoal</p>
+            <p><span class="badge badge-na">N/A</span> Não Aplicável</p>
+          </div>
+          <div>
+            <h3>Constraints</h3>
+            <p><strong class="cons">[PK]</strong> Chave primária</p>
+            <p><strong class="cons">[FK]</strong> Chave estrangeira</p>
+            <p><strong class="cons">[UNIQUE]</strong> Valor único</p>
+            <p><strong class="cons">[NOT NULL]</strong> Obrigatório</p>
+            <p><strong class="cons">[NULL]</strong> Opcional</p>
+          </div>
+          <div>
+            <h3>Perfis de acesso (RBAC)</h3>
+            <p><strong>admin</strong> Administrador da aplicação</p>
+            <p><strong>operador</strong> Usuário operacional</p>
+            <p><strong>DBA</strong> Administrador técnico (acesso direto ao banco)</p>
+            <p><strong>Sistema</strong> Rotinas internas da aplicação</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card controls" aria-label="Painel de controle">
+        <div class="controls-row">
+          <a class="btn btn-primary" href="docs/Especificacao_Requisitos_Regras_Negocio_BD.pdf" download>Baixar Especificação de Requisitos (PDF)</a>
+          <button id="derBtn" class="btn btn-outline" type="button">Abrir DER</button>
+        </div>
+        <label class="search" for="busca">
+          <span class="sr-only">Pesquisar tabela ou coluna</span>
+          <input id="busca" type="search" placeholder="Pesquisar por nome de tabela ou coluna..." autocomplete="off">
+        </label>
+        <p id="resultadoBusca" class="muted small" aria-live="polite"></p>
+      </section>
+
+      <div id="tabelas"></div>
+      <p id="semResultado" class="card empty" hidden>Nenhuma tabela ou coluna corresponde à pesquisa.</p>
+
+      <footer class="footer muted small">
+        Dicionário de Dados gerado a partir do DDL do sistema (db.py). Governança baseada em DAMA-DMBOK, COBIT e LGPD.
+      </footer>
+    </main>
+  </div>
+
+  <div id="derModal" class="modal" role="dialog" aria-modal="true" aria-label="Diagrama Entidade e Relacionamento" hidden>
+    <div class="modal-bar">
+      <strong>Diagrama Entidade e Relacionamento (DER)</strong>
+      <button id="derClose" class="btn btn-ghost" type="button">Fechar</button>
+    </div>
+    <div id="derStage" class="der-stage">
+      <img id="derImg" src="assets/der.png" alt="Diagrama Entidade e Relacionamento do sistema" draggable="false">
+    </div>
+    <div class="zoom-tools" role="group" aria-label="Controles de zoom">
+      <button id="zoomIn" class="btn btn-primary" type="button" aria-label="Aproximar">Zoom +</button>
+      <button id="zoomOut" class="btn btn-primary" type="button" aria-label="Afastar">Zoom -</button>
+      <button id="zoomReset" class="btn btn-outline" type="button" aria-label="Restaurar zoom e posição">Reset</button>
+    </div>
+    <p class="zoom-hint small">Role o mouse para dar zoom e arraste a imagem para mover.</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+Coloque nesta pasta o arquivo oficial da Especificacao de Requisitos, exportado em PDF, com o nome exato:
+
+Especificacao_Requisitos_Regras_Negocio_BD.pdf
+
+O botao "Baixar Especificacao de Requisitos (PDF)" do index.html aponta para esse caminho.
+Depois de colocar o PDF, apague este arquivo .txt.
